@@ -1,3 +1,4 @@
+import os
 from spotipy.oauth2 import SpotifyClientCredentials
 import json
 import spotipy
@@ -10,8 +11,7 @@ import requests
 import urllib
 import webbrowser
 import re
-from flask import Flask, render_template
-from flask import request
+import subprocess
 
 # Get youtube link from song title and artist
 def get_youtube_link(song_title, artist):
@@ -96,10 +96,6 @@ def get_youtube_link(song_title, artist):
     else:
         return ""
     
-
-
-app = Flask(__name__)
-
 # Spotify auth
 # This should be your spotify username
 username = "217unxkx4en4irnq4nkvgax6y"
@@ -112,52 +108,43 @@ token = util.prompt_for_user_token(username, scope, config.client_id, config.cli
 sp = spotipy.Spotify(auth=token)
 sp.trace=False
 
-# Get current playing song from Spotify and initialize track
-track = sp.current_user_playing_track()
-if track != None:
-	song_title = track['item']['name']
-	# This can be updated to include all the artists of a song (currently just the main one)
-	artist = track['item']['artists'][0]['name']
-	currentId = get_youtube_link(song_title, artist)
+previousTitle=""
 
-@app.route('/')
-def index():
-	# Main page
-	return render_template('index.html')
+while True:
+  try:
+      track = sp.current_user_playing_track()
+  except:
+      # This refreshes auth token which expires every hour - might be a dirty fix
+      token = util.prompt_for_user_token(username, scope, config.client_id, config.client_secret, redirect_uri)
+      sp = spotipy.Spotify(auth=token)
+      track = sp.current_user_playing_track()
+  if track == None:
+          # Do nothing
+          pass
+  else:
+          song_title = track['item']['name']
+          artist = track['item']['artists'][0]['name']
 
-previousId = ""
-previousTitle = ""
-@app.route('/api/')
-def api_get_name():
-	global previousTitle
-	global previousId
-	global sp
-	global username
-	global scope
-	global redirect_uri
-	# Endpoint for front end to get current track that will be called from UI client
-	try:
-		track = sp.current_user_playing_track()
-	except:
-		# This refreshes auth token which expires every hour - might be a dirty fix
-		token = util.prompt_for_user_token(username, scope, config.client_id, config.client_secret, redirect_uri)
-		sp = spotipy.Spotify(auth=token)
-		track = sp.current_user_playing_track()
-	if track == None:
-		return ""
-	else:
-		song_title = track['item']['name']
-		artist = track['item']['artists'][0]['name']
-
-		# This reduces the number of youtube api calls if the song hasn't changed on spotify
-		if song_title == previousTitle:
-			return previousId
-		else:
-			currentId = get_youtube_link(song_title, artist)
-
-			previousId = currentId
-			previousTitle = song_title
-			return currentId
-
-if __name__ == '__main__':
-    app.run(debug=True, host= '0.0.0.0')
+          # This reduces the number of youtube api calls if the song hasn't changed on spotify
+          if song_title == previousTitle:
+              # Do nothing
+              pass
+          else:
+              # The main changes from the web server approach are here
+              # Because of the reduced resources of the PI we need to use
+              # the OMX player to play youtube videos at full quality
+              currentId = get_youtube_link(song_title, artist)
+              previousId = currentId
+              previousTitle = song_title
+              print(song_title)
+	      command = "https://www.youtube.com/watch?v="
+	      command = command + currentId
+              # Using the youtube-dl command we get download url for a 
+              # youtube video which we pass to the OMX player
+	      argument = subprocess.check_output("youtube-dl -g -f best " + command, shell=True)
+              # Kill any existing processes first
+              os.system("killall omxplayer.bin")
+              # Play the video
+              subprocess.Popen(['omxplayer', argument.rstrip("\n\r")])
+              # There is a bigger delay with this approach 
+  time.sleep(0.5)
