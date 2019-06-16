@@ -11,7 +11,9 @@ I don't know what the use for this can be. I use it for background videos while 
 
 # Requirements
 The spotipy library needs to be updated by hand since apparently the pip install is outdated.
+
 You can do that like so:
+
 `pip install git+https://github.com/plamere/spotipy.git --upgrade`
 
 # Running the tool
