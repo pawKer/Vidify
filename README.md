@@ -1,4 +1,6 @@
-# Spotify Youtube Match
+# Vidify
+
+![](demo/vidify.gif)
 
 This is a repo for a quick tool I implemented that looks at your current playing song on Spotify and plays the corresponding Youtube video in a webpage running on localhost.
 
