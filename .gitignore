@@ -1,1 +1,7 @@
 config.py
+config.pyc
+vidify-fe
+__pycache__
+.ipynb_checkpoints
+.cache*
+*.pyc
