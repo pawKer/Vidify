@@ -31,7 +31,7 @@ def api_get_name():
     spotifyClient.update_current_playback()
     track = spotifyClient.current_playback()
     if track == None:
-        return "GfKs8oNP9m8"
+        return youtubeClient.DEFAULT_VIDEO_ID
     else:
         song_title = track['item']['name']
         artist = track['item']['artists'][0]['name']

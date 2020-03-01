@@ -1,19 +1,27 @@
+# -*- coding: latin-1 -*-
 import json
 import config
 import requests
 import urllib
 import re
-
+import logging
 class YoutubeApiClient():
+
+    DEFAULT_VIDEO_ID = "GfKs8oNP9m8"
+    logging.basicConfig(level=logging.INFO)
 
     def __init__(self, apiKey):
         self.key = apiKey
-
+        
     def get_youtube_link(self, song_title, artist):
-        temp_query = ""
-    
+        logging.info(song_title)
         # Build the query as song_title + artists (from the Spotify API)
-        temp_query += re.sub('[^0-9a-zA-Z ]+', '', song_title).lower() + " " + artist.replace('[', "").replace(']', "").replace(',', "").lower()
+        cleaned_song_title = song_title.split('(', 1)[0].split('-', 1)[0].rstrip().lower()
+        cleaned_song_title = re.sub('(?i)^!(?:(?![×Þß÷þø])[-0-9a-zÀ-ÿ ])+$', '', cleaned_song_title)
+        cleaned_artist_name = artist.replace('[', "").replace(']', "").replace(',', "").lower()
+        temp_query = cleaned_song_title + " " + cleaned_artist_name
+
+        logging.info("Searching Youtube for: " + temp_query)
 
         params_for_query = {"part": "snippet",
                             "maxResults": 5,
@@ -30,6 +38,11 @@ class YoutubeApiClient():
         page_query = requests.request(method="get", url=url1, params=params_for_query)
         j_results_query = json.loads(page_query.text)
 
+        if(page_query.status_code != 200):
+            logging.error("Youtube API Error")
+            logging.error(j_results_query)
+            return self.DEFAULT_VIDEO_ID
+        
         max_viewcount = 0
         max_viewcount_title = ""
         max_viewcount_id = ""
@@ -59,7 +72,6 @@ class YoutubeApiClient():
                     # Get the view count
                     view_count  = j_results_stats['items'][0]['statistics']['viewCount']
 
-                    cleaned_song_title = re.sub('[^0-9a-zA-Z ]+', '', song_title.split('(', 1)[0].split('-', 1)[0].rstrip().lower())
                     if int(view_count) > max_viewcount:
                         max_viewcount = int(view_count)
                         max_viewcount_title = video_title
@@ -67,10 +79,11 @@ class YoutubeApiClient():
                         if cleaned_song_title in video_title.lower():
                             better_pick = video_id
 
-            print("CHOICE IS: ", max_viewcount_title, " ---- ", max_viewcount, " ---- ", max_viewcount_id)
+            logging.info("VIDEO CHOICE IS: " + max_viewcount_title + " ---- VIEWCOUNT: " + str(max_viewcount) + " ---- ID: " + max_viewcount_id)
             if better_pick == "":
                 return max_viewcount_id
             else:
                 return better_pick
         else:
-            return "GfKs8oNP9m8"
+            logging.warn("Playing default video - couldn't find match")
+            return self.DEFAULT_VIDEO_ID
