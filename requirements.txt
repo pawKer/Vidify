@@ -5,7 +5,7 @@ backports.functools-lru-cache==1.6.1
 backports.shutil-get-terminal-size==1.0.0
 backports.shutil-which==3.5.2
 beautifulsoup4==4.8.2
-bleach==3.1.2
+bleach==3.1.4
 cachetools==3.1.1
 certifi==2019.11.28
 cffi==1.14.0
