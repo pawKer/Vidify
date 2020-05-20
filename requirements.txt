@@ -30,7 +30,7 @@ google-auth==1.11.2
 google-auth-httplib2==0.0.3
 google-auth-oauthlib==0.4.1
 html5lib==1.0.1
-httplib2==0.17.0
+httplib2==0.18.0
 idna==2.9
 imbalanced-learn==0.4.2
 imblearn==0.0
