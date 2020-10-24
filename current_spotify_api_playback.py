@@ -4,9 +4,9 @@ import spotipy.oauth2 as oauth2
 import json
 import numpy as np
 import urllib
+from player_client import PlayerClient
 
-
-class CurrentSpotifyPlayback():
+class CurrentSpotifyApiPlayback(PlayerClient):
     """Module for getting information about current Spotify playback.
 
     Attributes:
@@ -62,6 +62,15 @@ class CurrentSpotifyPlayback():
                 raise CouldNotFetchPlaybackException(
                     'Something went wrong when' \
                     'fetching current playback.')
+
+            if data != None:
+                song_title = data['item']['name']
+                # This can be updated to include all the artists of a song (currently just the main one)
+                artist = data['item']['artists'][0]['name']
+                data = {
+                    "artist": artist,
+                    "song_title": song_title
+                }
             return data
 
     def _refresh_token(self):
