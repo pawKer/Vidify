@@ -1,23 +1,23 @@
 from SwSpotify import spotify, SpotifyNotRunning
 from player_client import PlayerClient
 import logging
+log = logging.getLogger('flask_web_server.service')
 class CurrentSpotifyAppPlayback(PlayerClient):
-    previousData = None
+    data = None
+
     def __init__(self):
-        self.data = self.current_playback()
+        self.data = self.get_current_song()
 
-    def update_current_playback(self):
-        self.previousData = self.data
-        self.data = self.current_playback()
-
-    def current_playback(self):
-        data = None
+    def get_current_song(self):
+        newData = None
         try:
             title, artist = spotify.current()
-            data = {
+            newData = {
                 "artist": artist,
                 "song_title": title
             }
+            self.data = newData
         except SpotifyNotRunning as e:
-            logging.warn("Spotify is not running - open the Spotify app and start playing a song")
-        return data
+            log.warning("Spotify is not running - open the Spotify app and start playing a song")
+
+        return self.data

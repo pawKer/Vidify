@@ -5,23 +5,23 @@ import requests
 import urllib
 import re
 import logging
+log = logging.getLogger('flask_web_server.service')
 class YoutubeApiClient():
 
     DEFAULT_VIDEO_ID = "GfKs8oNP9m8"
-    logging.basicConfig(level=logging.INFO)
 
     def __init__(self, apiKey):
         self.key = apiKey
         
     def get_youtube_link(self, song_title, artist):
-        logging.info(song_title)
+        log.info(song_title)
         # Build the query as song_title + artists (from the Spotify API)
         cleaned_song_title = song_title.split('(', 1)[0].split('-', 1)[0].rstrip().lower()
         cleaned_song_title = re.sub('(?i)^!(?:(?![×Þß÷þø])[-0-9a-zÀ-ÿ ])+$', '', cleaned_song_title)
         cleaned_artist_name = artist.replace('[', "").replace(']', "").replace(',', "").lower()
         temp_query = cleaned_song_title + " " + cleaned_artist_name
 
-        logging.info("Searching Youtube for: " + temp_query)
+        log.info("Searching Youtube for: " + temp_query)
 
         params_for_query = {"part": "snippet",
                             "maxResults": 5,
@@ -39,8 +39,8 @@ class YoutubeApiClient():
         j_results_query = json.loads(page_query.text)
 
         if(page_query.status_code != 200):
-            logging.error("Youtube API Error")
-            logging.error(j_results_query)
+            log.error("Youtube API Error")
+            log.error(j_results_query)
             return self.DEFAULT_VIDEO_ID
         
         max_viewcount = 0
@@ -79,11 +79,12 @@ class YoutubeApiClient():
                         if cleaned_song_title in video_title.lower():
                             better_pick = video_id
 
-            logging.info("VIDEO CHOICE IS: " + max_viewcount_title + " ---- VIEWCOUNT: " + str(max_viewcount) + " ---- ID: " + max_viewcount_id)
-            if better_pick == "":
+            log.info("VIDEO CHOICE IS: " + max_viewcount_title + " ---- VIEWCOUNT: " + str(max_viewcount) + " ---- ID: " + max_viewcount_id)
+            if better_pick == "" or better_pick == max_viewcount_id:
                 return max_viewcount_id
             else:
+                log.info("Actually, " + better_pick + " seems to be a better pick because it has more views or the title is more accurate.")
                 return better_pick
         else:
-            logging.warn("Playing default video - couldn't find match")
+            log.warn("Playing default video - couldn't find match")
             return self.DEFAULT_VIDEO_ID
