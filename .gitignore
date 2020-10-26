@@ -1,6 +1,7 @@
 config.py
 config.pyc
 vidify-fe
+.vscode
 __pycache__
 .ipynb_checkpoints
 .cache*
