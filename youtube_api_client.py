@@ -24,7 +24,7 @@ class YoutubeApiClient():
         log.info("Searching Youtube for: " + temp_query)
 
         params_for_query = {"part": "snippet",
-                            "maxResults": 5,
+                            "maxResults": 3,
                             "order": "relevance",
                             "pageToken": "",
                             "q": temp_query,
@@ -83,7 +83,7 @@ class YoutubeApiClient():
             if better_pick == "" or better_pick == max_viewcount_id:
                 return max_viewcount_id
             else:
-                log.info("Actually, " + better_pick + " seems to be a better pick because it has more views or the title is more accurate.")
+                log.info("Actually, " + better_pick + " seems to be a better pick because the title of the song is in the title of the video.")
                 return better_pick
         else:
             log.warn("Playing default video - couldn't find match")

@@ -5,9 +5,17 @@ from current_spotify_app_playback import CurrentSpotifyAppPlayback
 from flask import Flask, render_template
 from flask import request
 import sys
+import os
 import logging
 
-app = Flask("flask_web_server")
+# Logic for exposing the templates and static folders to PyInstaller
+if getattr(sys, 'frozen', False):
+    template_folder = os.path.join(sys._MEIPASS, 'templates')
+    static_folder = os.path.join(sys._MEIPASS, 'static')
+    app = Flask("flask_web_server", template_folder=template_folder, static_folder=static_folder)
+else:
+    app = Flask("flask_web_server")
+
 app.logger.setLevel(logging.INFO)
 redirect_uri="http://localhost:8888/callback/"
 
@@ -52,7 +60,7 @@ def api_get_name():
                 previousTitle = track['song_title']
                 return currentId
     except Exception as e:
-        app.logger.error("An error occured in the app: " + str(e.message))
+        app.logger.error("An error occured in the app: " + str(e))
     
     return youtubeClient.DEFAULT_VIDEO_ID
 
