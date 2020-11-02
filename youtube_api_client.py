@@ -5,10 +5,9 @@ import requests
 import urllib
 import re
 import logging
+from youtube_client import YoutubeClient
 log = logging.getLogger('flask_web_server.service')
-class YoutubeApiClient():
-
-    DEFAULT_VIDEO_ID = "GfKs8oNP9m8"
+class YoutubeApiClient(YoutubeClient):
 
     def __init__(self, apiKey):
         self.key = apiKey
@@ -16,10 +15,7 @@ class YoutubeApiClient():
     def get_youtube_link(self, song_title, artist):
         log.info(song_title)
         # Build the query as song_title + artists (from the Spotify API)
-        cleaned_song_title = song_title.split('(', 1)[0].split('-', 1)[0].rstrip().lower()
-        cleaned_song_title = re.sub('(?i)^!(?:(?![×Þß÷þø])[-0-9a-zÀ-ÿ ])+$', '', cleaned_song_title)
-        cleaned_artist_name = artist.replace('[', "").replace(']', "").replace(',', "").lower()
-        temp_query = cleaned_song_title + " " + cleaned_artist_name
+        temp_query = song_title + " " + artist
 
         log.info("Searching Youtube for: " + temp_query)
 
@@ -76,7 +72,7 @@ class YoutubeApiClient():
                         max_viewcount = int(view_count)
                         max_viewcount_title = video_title
                         max_viewcount_id = video_id
-                        if cleaned_song_title in video_title.lower():
+                        if song_title in video_title.lower():
                             better_pick = video_id
 
             log.info("VIDEO CHOICE IS: " + max_viewcount_title + " ---- VIEWCOUNT: " + str(max_viewcount) + " ---- ID: " + max_viewcount_id)
