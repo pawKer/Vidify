@@ -1,56 +1,43 @@
 <html>
+
 <head>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link href="{{ url_for('static', filename='css/style.css') }}" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="{{ url_for('static', filename='css/style.css') }}" type="text/css" rel="stylesheet">
 </head>
+
 <body style="border: 0px; margin:0px; padding: 0px; position:fixed; overflow:hidden; width: 100%;">
-<!-- Main video frame for youtube video -->
-<div class="video-container">
-	<div class = "h_iframe">
-    <iframe id = "video_frame" class="videoContainer__video" width="1920" height="1080" src="" frameborder="0" allowfullscreen></iframe>
+    <!-- Main video frame for youtube video -->
+    <div class="video-container">
+        <div class="h_iframe">
+            <iframe id="video_frame" class="videoContainer__video" width="1920" height="1080" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
     </div>
-</div>
-<script>
- // Get Youtube video id from backend endpoint
- // I do this once here to the initialize frame no matter what
- // Polls are synchronous in order for this to work
- var currentId = "";
- $.ajax({
-        url: "/api/",
-        async: false
-    }).done(function(res) {
-        currentId = res;
-    });
- document.getElementById("video_frame").src = "http://www.youtube.com/embed/" + currentId + "?rel=0;autoplay=1&mute=1";
+    <script>
+        var currentId = "";
+        var previousId = "";
+        // Get Youtube video id from backend endpoint
+        // Polls are synchronous in order for this to work
+        function updateMessages() {
+            $.ajax({
+                url: "/api/",
+                async: false
+            }).done(function(res) {
+                currentId = res;
+            });
 
-  // Use the recursive setTimeout method to poll the endpoint with a small pause
-  $(function() {
-  setTimeout(updateMessages, 500);
-   });
+            // If when the endpoint is polled the id is the same as the last time it was polled, do nothing
+            // If there is a new id (so the current playing song has changed) update the video frame
+            // with the new video
+            if (currentId != previousId) {
+                document.getElementById("video_frame").src = "https://www.youtube.com/embed/" + currentId + "?rel=0;autoplay=1&mute=1";
+                previousId = currentId;
+            }
+            setTimeout(updateMessages, 500);
+        }
 
-  var previousId = currentId;
-
-   // If when the endpoint is polled the id is the same as the last time it was polled, do nothing
-   // If there is a new id (so the current playing song has changed) update the video frame
-   // with the new video
-   function updateMessages () {
-	  	$.ajax({
-	        url: "/api/",
-	        async: false
-	    }).done(function(res) {
-	        currentId = res;
-	    });
-	    if(currentId != previousId)
-	    {
-	    	document.getElementById("video_frame").src = "http://www.youtube.com/embed/" + currentId + "?rel=0;autoplay=1&mute=1";
-	    	previousId = currentId;
-	    }
-	  	setTimeout(updateMessages, 500);
-	}
-
-
- </script>
+        updateMessages();
+    </script>
 </body>
 
 </html>

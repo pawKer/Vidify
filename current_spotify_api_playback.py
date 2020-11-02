@@ -4,9 +4,10 @@ import spotipy.oauth2 as oauth2
 import json
 import numpy as np
 import urllib
-
-
-class CurrentSpotifyPlayback():
+from player_client import PlayerClient
+import logging
+log = logging.getLogger('flask_web_server.service')
+class CurrentSpotifyApiPlayback(PlayerClient):
     """Module for getting information about current Spotify playback.
 
     Attributes:
@@ -62,6 +63,15 @@ class CurrentSpotifyPlayback():
                 raise CouldNotFetchPlaybackException(
                     'Something went wrong when' \
                     'fetching current playback.')
+
+            if data != None:
+                song_title = data['item']['name']
+                # This can be updated to include all the artists of a song (currently just the main one)
+                artist = data['item']['artists'][0]['name']
+                data = {
+                    "artist": artist,
+                    "song_title": song_title
+                }
             return data
 
     def _refresh_token(self):
@@ -110,7 +120,7 @@ class CurrentSpotifyPlayback():
         else:
             return False
 
-    def get_current_song_id(self):
+    def get_current_song(self):
         """Returns the current song id.
 
         Returns:
@@ -121,26 +131,35 @@ class CurrentSpotifyPlayback():
                 any device.
 
         """
+        self.update_current_playback()
         if self.data:
-            return self.data['item']['id']
+            return self.data
         else:
             raise NotPlayingAnywhereException()
 
 
 class NotPlayingAnywhereException(Exception):
     """Raises when Spotify is not active on any device."""
+    def __init__(self):
+        self.message = "Spotify is not active on any device"
     pass
 
 
 class CouldNotRefreshTokenException(Exception):
     """Raises when token could not be refreshed"""
+    def __init__(self):
+        self.message = "Spotify token could not be refreshed"
     pass
 
 
 class CouldNotFetchPlaybackException(Exception):
     """Raises when current playback could not be fetched."""
+    def __init__(self):
+        self.message = "Spotify current playback could not be fetched."
     pass
 
 class NoArtworkException(Exception):
     """Raises when the current playback has no artwork."""
+    def __init__(self):
+        self.message = "Spotify current playback has no artwork."
     pass
