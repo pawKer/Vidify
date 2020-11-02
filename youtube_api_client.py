@@ -1,6 +1,5 @@
 # -*- coding: latin-1 -*-
 import json
-import config
 import requests
 import urllib
 import re

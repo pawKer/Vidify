@@ -1,4 +1,3 @@
-import config
 from youtube_api_client import YoutubeApiClient
 from youtube_dl_client import YoutubeDlClient
 from current_spotify_api_playback import CurrentSpotifyApiPlayback
@@ -26,6 +25,7 @@ spotifyClient = None
 youtubeClient = None
 if len(sys.argv) == 3:
     if sys.argv[1] == "api":
+        import config
         app.logger.info("Using Spotify API - config needs to be populated with API key")
         spotifyClient = CurrentSpotifyApiPlayback(config.client_id, config.client_secret, redirect_uri, config.refresh_token)
     elif sys.argv[1] == "app":
@@ -36,6 +36,7 @@ if len(sys.argv) == 3:
         spotifyClient = CurrentSpotifyAppPlayback()
     
     if sys.argv[2] == "yt-api":
+        import config
         app.logger.info("Using Youtube API - config needs to be populated with API key")
         youtubeClient = YoutubeApiClient(config.youtube_client_secret)
     elif sys.argv[2] == "yt-dl":
@@ -85,4 +86,4 @@ def index():
 	return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, host= '0.0.0.0', use_reloader=False)
+    app.run(debug=True, port=5045,host= '0.0.0.0', use_reloader=False)
