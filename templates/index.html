@@ -3,14 +3,24 @@
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <link href="{{ url_for('static', filename='css/style.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/landing.css') }}" type="text/css" rel="stylesheet">
 </head>
 
-<body style="border: 0px; margin:0px; padding: 0px; position:fixed; overflow:hidden; width: 100%;">
+<body style="border: 0px; position:fixed; overflow:hidden; width: 100%;">
     <!-- Main video frame for youtube video -->
-    <div class="container">
-        <h1>Video playing</h1>
-        <a href="/video">Click here</a>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 offset-3 float-md-center vertical-center">
+            <div class="jumbotron jumbotronCustom">
+                <h1 class="display-4">Vidify has started!</h1>
+                <p class="lead">Enjoy awesome visuals while listening to the high-quality Spotify audio right in your browser!</p>
+                <p class="lead">Maximize your browser for the best experience (<i>F11 or fn + F11</i>).</p>
+                <hr class="my-4">
+                <p>Open Spotify, start playing a song and click the button below to go to the video page.</p>
+                <p class="lead">
+                    <a class="btn btn-primary btn-lg" href="/video" role="button">Let's go !</a>
+                </p>
+            </div>
+        </div>
     </div>
 </body>
 

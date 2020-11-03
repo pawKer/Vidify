@@ -1,0 +1,26 @@
+body {
+    background-image: url('../assets/bg-gif.gif');
+    background-size: cover;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+
+.jumbotronCustom {
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 100%;
+}
+
+.vertical-center {
+    min-height: 100%;
+    /* Fallback for browsers do NOT support vh unit */
+    min-height: 100vh;
+    /* These two lines are counted as one :-)       */
+    display: flex;
+    align-items: center;
+}
+
+p,
+h1 {
+    color: white;
+}
