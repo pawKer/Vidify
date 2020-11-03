@@ -94,4 +94,4 @@ def index():
 
 if __name__ == '__main__':
     webbrowser.open_new(url='http://localhost:{port}'.format(port=PORT))
-    app.run(debug=True, port=PORT, host= '0.0.0.0', use_reloader=False)
+    app.run(debug=True, port=PORT, host='0.0.0.0', use_reloader=False)
