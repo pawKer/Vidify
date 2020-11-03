@@ -82,6 +82,11 @@ def api_get_name():
     
     return DEFAULT_VIDEO_ID
 
+@app.route('/video')
+def video():
+	# Video page
+	return render_template('video.html')
+
 @app.route('/')
 def index():
 	# Main page

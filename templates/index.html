@@ -8,36 +8,10 @@
 
 <body style="border: 0px; margin:0px; padding: 0px; position:fixed; overflow:hidden; width: 100%;">
     <!-- Main video frame for youtube video -->
-    <div class="video-container">
-        <div class="h_iframe">
-            <iframe id="video_frame" class="videoContainer__video" width="1920" height="1080" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
+    <div class="container">
+        <h1>Video playing</h1>
+        <a href="/video">Click here</a>
     </div>
-    <script>
-        var currentId = "";
-        var previousId = "";
-        // Get Youtube video id from backend endpoint
-        // Polls are synchronous in order for this to work
-        function updateMessages() {
-            $.ajax({
-                url: "/api/",
-                async: false
-            }).done(function(res) {
-                currentId = res;
-            });
-
-            // If when the endpoint is polled the id is the same as the last time it was polled, do nothing
-            // If there is a new id (so the current playing song has changed) update the video frame
-            // with the new video
-            if (currentId != previousId) {
-                document.getElementById("video_frame").src = "https://www.youtube.com/embed/" + currentId + "?rel=0;autoplay=1&mute=1";
-                previousId = currentId;
-            }
-            setTimeout(updateMessages, 500);
-        }
-
-        updateMessages();
-    </script>
 </body>
 
 </html>
