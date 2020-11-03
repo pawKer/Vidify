@@ -7,6 +7,7 @@ from flask import request
 import sys
 import os
 import logging
+import webbrowser
 from utils import Utils
 
 # Logic for exposing the templates and static folders to PyInstaller
@@ -18,14 +19,15 @@ else:
     app = Flask("flask_web_server")
 
 app.logger.setLevel(logging.INFO)
-redirect_uri="http://localhost:8888/callback/"
 DEFAULT_VIDEO_ID = "GfKs8oNP9m8"
+PORT = 9999
 
 spotifyClient = None
 youtubeClient = None
 if len(sys.argv) == 3:
     if sys.argv[1] == "api":
         import config
+        redirect_uri="http://localhost:8888/callback/"
         app.logger.info("Using Spotify API - config needs to be populated with API key")
         spotifyClient = CurrentSpotifyApiPlayback(config.client_id, config.client_secret, redirect_uri, config.refresh_token)
     elif sys.argv[1] == "app":
@@ -86,4 +88,5 @@ def index():
 	return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5055, host= '0.0.0.0', use_reloader=False)
+    webbrowser.open_new(url='http://localhost:{port}'.format(port=PORT))
+    app.run(debug=True, port=PORT, host= '0.0.0.0', use_reloader=False)
