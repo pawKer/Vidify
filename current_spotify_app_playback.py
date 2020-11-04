@@ -5,13 +5,11 @@ log = logging.getLogger('flask_web_server.service')
 class CurrentSpotifyAppPlayback(PlayerClient):
     data = None
 
-    def __init__(self):
-        self.data = self.get_current_song()
-
     def get_current_song(self):
         newData = None
         try:
             title, artist = spotify.current()
+            log.info("Playing on Spotify: {artist} - {title}".format(artist=artist, title=title))
             newData = {
                 "artist": artist,
                 "song_title": title
