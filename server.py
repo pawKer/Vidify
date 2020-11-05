@@ -6,9 +6,7 @@ from flask import Flask, render_template
 from flask import request
 import sys
 import os
-from threading import Timer
 import logging
-from webbrowser import open
 from utils import Utils
 
 # Logic for exposing the templates and static folders to PyInstaller
@@ -94,6 +92,4 @@ def index():
 	return render_template('index.html')
 
 if __name__ == '__main__':
-    url = 'http://localhost:{port}'.format(port=PORT)
-    Timer(1.25, open, args=[url]).start()
     app.run(debug=True, port=PORT, host='0.0.0.0', use_reloader=False)
