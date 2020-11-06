@@ -25,7 +25,7 @@ class VidifyWindow(QMainWindow):
         QMainWindow.__init__(self)
 
         self.setMinimumSize(QSize(240, 120))    
-        self.setWindowTitle("Vidify") 
+        self.setWindowTitle("Vidify Web") 
 
         centralWidget = QWidget(self)          
         self.setCentralWidget(centralWidget)   
@@ -33,9 +33,17 @@ class VidifyWindow(QMainWindow):
         gridLayout = QGridLayout()     
         centralWidget.setLayout(gridLayout)  
 
-        title = QLabel("The app will start in your browser soon!", self) 
+        title = QLabel("Vidify Web is now running. A new tab will be opened in your browser!", self) 
         title.setAlignment(QtCore.Qt.AlignCenter) 
+        font = title.font()
+        font.setPointSize(15)
+        title.setFont(font)
+
+        stopInst = QLabel("To stop the app just close this window.", self) 
+        stopInst.setAlignment(QtCore.Qt.AlignCenter) 
+
         gridLayout.addWidget(title, 0, 0)
+        gridLayout.addWidget(stopInst, 1, 0)
         self.show()
 
 if __name__ == '__main__':
