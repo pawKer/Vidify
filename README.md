@@ -1,9 +1,9 @@
 # Vidify Web
-## Automatically play the video for your currently playing song on Spotify in your browser
+### Automatically play the video for your currently playing song on Spotify in your browser
  
 ![](demo/vidify.gif)
 
-# Running the app
+## Running the app
 ## The plug-and-play way
 With the v1.0 release this is now very simple! You just have to download the executable file from [here](https://github.com/pawKer/Vidify/releases/tag/v1.0).
 
