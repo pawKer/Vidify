@@ -3,7 +3,7 @@ import logging
 from youtube_client import YoutubeClient
 log = logging.getLogger('flask_web_server.service')
 class YoutubeDlClient(YoutubeClient):
-
+    DEFAULT_VIDEO_ID = "GfKs8oNP9m8"
     def get_youtube_link(self, song_title, artist):
         youtube_id = None
         tries = 0
