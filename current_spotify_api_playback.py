@@ -2,8 +2,6 @@ import spotipy
 import spotipy.util as util
 import spotipy.oauth2 as oauth2
 import json
-import numpy as np
-import urllib
 from player_client import PlayerClient
 import logging
 log = logging.getLogger('flask_web_server.service')

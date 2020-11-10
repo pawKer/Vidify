@@ -3,7 +3,6 @@
 Flask == 1.1.2
 PyQt5_sip == 12.8.1
 SwSpotify == 1.2.1
-numpy == 1.18.5
 requests == 2.24.0
 spotipy == 2.16.1
 youtube_dl == 2020.11.1.1
