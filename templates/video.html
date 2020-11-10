@@ -16,6 +16,7 @@
     <script>
         var currentId = "";
         var previousId = "";
+        var playingState = 1;
         // Get Youtube video id from backend endpoint
         // Polls are synchronous in order for this to work
         function updateMessages() {
@@ -23,16 +24,27 @@
                 url: "/api/",
                 async: false
             }).done(function(res) {
-                currentId = res;
+                currentId = res['youtubeId'];
+                isPlaying = res['isPlaying'];
             });
 
             // If when the endpoint is polled the id is the same as the last time it was polled, do nothing
             // If there is a new id (so the current playing song has changed) update the video frame
             // with the new video
+            var video_frame = document.getElementById("video_frame");
             if (currentId != previousId) {
-                document.getElementById("video_frame").src = "https://www.youtube.com/embed/" + currentId + "?rel=0;autoplay=1&mute=1";
+                video_frame.src = "https://www.youtube.com/embed/" + currentId + "?rel=0&autoplay=1&controls=0&enablejsapi=1&version=3&playerapiid=ytplayer&loop=1&mute=1";
                 previousId = currentId;
             }
+
+            if (isPlaying === 0 && playingState === 1) {
+                playingState = 0;
+                video_frame.contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
+            } else if (isPlaying === 1 && playingState === 0) {
+                playingState = 1;
+                video_frame.contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
+            }
+
             setTimeout(updateMessages, 500);
         }
 

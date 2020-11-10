@@ -3,7 +3,7 @@ import logging
 from youtube_client import YoutubeClient
 log = logging.getLogger('flask_web_server.service')
 class YoutubeDlClient(YoutubeClient):
-
+    DEFAULT_VIDEO_ID = "GfKs8oNP9m8"
     def get_youtube_link(self, song_title, artist):
         with youtube_dl.YoutubeDL() as ytdl:
             try:
@@ -15,6 +15,7 @@ class YoutubeDlClient(YoutubeClient):
                 # (a DownloadError from youtube_dl).
                 log.warning("YouTube-dl wasn't able to obtain the video: %s",
                              str(e))
+                return self.DEFAULT_VIDEO_ID
             else:
                 if len(data['entries']) == 0:
                     log.warning("YouTube-dl returned no entries")

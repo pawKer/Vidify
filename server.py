@@ -2,8 +2,7 @@ from youtube_api_client import YoutubeApiClient
 from youtube_dl_client import YoutubeDlClient
 from current_spotify_api_playback import CurrentSpotifyApiPlayback
 from current_spotify_app_playback import CurrentSpotifyAppPlayback
-from flask import Flask, render_template
-from flask import request
+from flask import Flask, render_template, request, jsonify
 import sys
 import os
 import logging
@@ -63,19 +62,28 @@ def api_get_name():
     global youtubeClient
     try:
         track = spotifyClient.get_current_song()
-        if track == None:
-            return DEFAULT_VIDEO_ID
+        if track['artist'] == '' and track['song_title'] == '':
+            return jsonify({
+                    "youtubeId": DEFAULT_VIDEO_ID,
+                    "isPlaying": 1
+                })
         else:
             # This reduces the number of youtube api calls if the song hasn't changed on spotify
             if track['song_title'] == previousTitle:
-                return previousId
+                return jsonify({
+                    "youtubeId": previousId,
+                    "isPlaying": track['is_playing']
+                })
             else:
                 clean_title = Utils.clean_song_title(track['song_title'])
                 clean_artist = Utils.clean_artist_name(track['artist'])
                 currentId = youtubeClient.get_youtube_link(clean_title, clean_artist)
                 previousId = currentId
                 previousTitle = track['song_title']
-                return currentId
+                return jsonify({
+                    "youtubeId": currentId,
+                    "isPlaying": track['is_playing']
+                })
     except Exception as e:
         app.logger.error("An error occured in the app: " + str(e))
     
