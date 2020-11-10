@@ -10,6 +10,7 @@ class CurrentSpotifyAppPlayback(PlayerClient):
                 "song_title": '',
                 "is_playing": 0
             }
+
     def get_current_song(self):
         try:
             title, artist = spotify.current()
