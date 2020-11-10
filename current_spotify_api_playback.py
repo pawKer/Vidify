@@ -2,8 +2,6 @@ import spotipy
 import spotipy.util as util
 import spotipy.oauth2 as oauth2
 import json
-import numpy as np
-import urllib
 from player_client import PlayerClient
 import logging
 log = logging.getLogger('flask_web_server.service')
@@ -40,7 +38,11 @@ class CurrentSpotifyApiPlayback(PlayerClient):
             self.data = self.current_playback()
         except (CouldNotRefreshTokenException,
                 CouldNotFetchPlaybackException):
-            self.data = None
+            self.data = {
+                    "artist": '',
+                    "song_title": '',
+                    "is_playing": 0
+            }
 
     def current_playback(self):
         """Fetches the current playback.
@@ -57,20 +59,27 @@ class CurrentSpotifyApiPlayback(PlayerClient):
         if token:
             try:
                 sp = spotipy.Spotify(auth=token)
-                data = json.dumps(sp.current_playback())
+                data = json.dumps(sp.current_user_playing_track())
                 data = json.loads(data)
             except Exception:
-                raise CouldNotFetchPlaybackException(
-                    'Something went wrong when' \
-                    'fetching current playback.')
-
+                raise CouldNotFetchPlaybackException()
+            
             if data != None:
-                song_title = data['item']['name']
-                # This can be updated to include all the artists of a song (currently just the main one)
-                artist = data['item']['artists'][0]['name']
+                is_playing = 0
+
+                if data['is_playing']:
+                    is_playing = 1
+                
                 data = {
-                    "artist": artist,
-                    "song_title": song_title
+                    "artist": data['item']['artists'][0]['name'],
+                    "song_title": data['item']['name'],
+                    "is_playing": is_playing
+                }
+            else:
+                data = {
+                    "artist": '',
+                    "song_title": '',
+                    "is_playing": 0
                 }
             return data
 
@@ -89,36 +98,7 @@ class CurrentSpotifyApiPlayback(PlayerClient):
             return self.auth.refresh_access_token(self.refresh_token)\
                 ['access_token']
         except Exception:
-            raise CouldNotRefreshTokenException('Could not refresh token.')
-
-    def connected_to_chromecast(self, name):
-        """Checks if connected to a Chromecast.
-
-        Args:
-            name (str): Name of Chromecast
-
-        Returns:
-            bool: True if connected to a Chromecast, False otherwise.
-
-        """
-        return self.data and self.data['device']['name'] == name
-
-    def new_song(self, old_song_id):
-        """Checks if a new song is playing.
-
-        Args:
-            old_song_id (str): The song id given by the Spotify API.
-
-        Returns:
-            bool: True if new song, False otherwise.
-
-        """
-        if self.data:
-            is_active = self.data['device']['is_active']
-            current_song_id = self.get_current_song_id()
-            return is_active and current_song_id != old_song_id
-        else:
-            return False
+            raise CouldNotRefreshTokenException()
 
     def get_current_song(self):
         """Returns the current song id.
