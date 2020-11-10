@@ -1,3 +1,4 @@
+# This requires pyinstaller
 pyinstaller \
     --windowed \
     --clean \
