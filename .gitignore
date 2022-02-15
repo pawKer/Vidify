@@ -9,3 +9,5 @@ __pycache__
 *.ipynb
 build
 dist
+/test_env
+gui_main.spec

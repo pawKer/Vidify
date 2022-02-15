@@ -7,6 +7,7 @@ import sys
 import os
 import logging
 from utils import Utils
+from waitress import serve
 
 # Logic for exposing the templates and static folders to PyInstaller
 if getattr(sys, 'frozen', False):
@@ -52,6 +53,11 @@ else:
 
 previousId = ""
 previousTitle = ""
+
+@app.after_request
+def set_headers(response):
+    response.headers["Referrer-Policy"] = 'no-referrer-when-downgrade'
+    return response
 
 # Endpoint for front end to get current track that will be called from UI client
 @app.route('/api/')
@@ -100,4 +106,9 @@ def index():
 	return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, port=PORT, host='0.0.0.0', use_reloader=False)
+    serve(
+        app,
+        host='0.0.0.0',
+        port=PORT,
+        threads=2
+    )
