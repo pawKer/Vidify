@@ -8,11 +8,11 @@
 
 ## The plug-and-play way
 
-Since the v1.0 release this is now very simple! You just have to download the executable file from [here](https://github.com/pawKer/Vidify/releases/tag/v1.0) if you're on Windows. On MacOS or Linux you will need to run it via python at the moment. You can find instructions for how to do that below.
+You just have to download the executable file from [here](https://github.com/pawKer/Vidify/releases/latest) if you're on Windows. On MacOS or Linux you will need to run it via python at the moment. You can find instructions for how to do that below.
 
 ## The customizable way
 
-If you prefer, the app also supports using the Spotify and Youtube APIs instead of using the SwSpotify and youtube-dl libraries. However, for these you have to provide your own API keys and run it using python. The advantage of doing this is you get better Youtube video matches and you don't have to have the Spotify app open on the computer where you are running the app.
+If you prefer, the app also supports using the Spotify and Youtube APIs instead of using the `SwSpotify` and `youtube-dl` libraries. However, for these you have to provide your own API keys and run it using python. The advantage of doing this is you get better Youtube video matches and you don't have to have the Spotify app open on the computer where you are running the app.
 
 ## Installing the Python version
 
@@ -66,7 +66,3 @@ When the song is changed on Spotify, the video will automatically change on the 
 The newer version does the same thing but without using the APIs and instead making use of the SwSpotify library which reads the current playing status from the Spotify app running on your computer and the youtube-dl library which finds the youtube url for your search.
 
 The song on Spotify and the video aren't synced since sometimes videos are longer than the songs and there is also a short delay in the matching process.
-
-# Package command
-
-`pyinstaller -w -F --add-data "templates;templates" --add-data "static;static" gui_main.py`
