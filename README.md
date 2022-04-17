@@ -1,20 +1,24 @@
-# Vidify Web
+<h1 align="center">🎬<br>
+  Vidify Web
+</h1>
+<h3 align="center">Play the Youtube video for your currently playing song on Spotify in a web page</h3>
 
-### Automatically play the video for your currently playing song on Spotify in your browser
+<div align="center" > 
+<img src="./demo/vidify5.gif" />
+</div>
+<h3 align="center"><a href="https://github.com/pawKer/Vidify/releases/latest" target="_blank">Latest version</a></h3>
 
-![](demo/vidify.gif)
+## 🚀 Quick start
 
-## Running the app
-
-## The plug-and-play way
+### The plug-and-play way
 
 You just have to download the executable file from [here](https://github.com/pawKer/Vidify/releases/latest) if you're on Windows. On MacOS or Linux you will need to run it via python at the moment. You can find instructions for how to do that below.
 
-## The customizable way
+### The customizable way
 
 If you prefer, the app also supports using the Spotify and Youtube APIs instead of using the `SwSpotify` and `youtube-dl` libraries. However, for these you have to provide your own API keys and run it using python. The advantage of doing this is you get better Youtube video matches and you don't have to have the Spotify app open on the computer where you are running the app.
 
-## Installing the Python version
+## 🔧 Installing the Python version
 
 ### Requirements
 
@@ -22,7 +26,7 @@ To download all of the python libraries required run the following command. This
 
 `pip install -r requirements.txt`
 
-The spotipy library needs to be updated by hand since apparently the pip install is outdated.
+(Might not be necessary) The spotipy library needs to be updated by hand since apparently the pip install is outdated.
 
 You can do that like so:
 
@@ -30,8 +34,9 @@ You can do that like so:
 
 ### Configuration
 
-Skip to `Running the app` if you're trying to just run the default app.
-To run the app you will need to use your own API keys for Spotify and Youtube. You can find documentation on how to get these on Google.
+Skip to [Running the app](#running-the-app) if you're trying to just run the default app (without any APIs).
+
+To run the app with the APIs you will need to use your own API keys for Spotify and Youtube. You can find documentation on how to get these on Google.
 After you have them, create a file `config.py` with the following content
 
 ```
@@ -53,13 +58,13 @@ You can run the server by doing `python gui_main.py`. This will start the GUI an
 You can select what services you want to use by passing the following command line arguments `python server.py <SPOTIFY-SERVICE> <YOUTUBE-SERVICE>`.
 The possible values are SPOTIFY-SERVICE: `api` or `app` and YOUTUBE-SERVICE: `yt-api` or `yt-dl`. The defaults are `app` and `yt-dl` because these don't require API credentials.
 
-# Raspberry Pi Version (not up-to-date)
+# 🍓 Raspberry Pi Version (not up-to-date)
 
 I wanted to have this script run on a Pi all the time and play the videos on a monitor but unfortunately it is not very good at playing Youtube videos directly from the website so I had to adapt the script. Instead of running it as a web server, I made a script that uses OMXPlayer and youtube-dl.
 
 It uses youtube-dl to get the youtube video download link and then passes that link to OMXPlayer. The rest of the functionality is the same as above.
 
-# How it works
+# ❓ How it works
 
 I use the spotipy library for the Spotify API to get the current playing song on Spotify and then look for the corresponding Youtube video for that song using the Youtube API. An endpoint that retrieves the video id in Flask is checked continously from the front-end in Javascript and the video is autoplayed in a video frame in HTML.
 When the song is changed on Spotify, the video will automatically change on the webpage.
