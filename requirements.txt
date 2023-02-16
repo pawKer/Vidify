@@ -25,7 +25,7 @@ swspotify==1.2.3
 typing_extensions==4.1.1
 urllib3==1.26.8
 waitress==2.0.0
-Werkzeug==2.0.3
+Werkzeug==2.2.3
 wrapt==1.13.3
 youtube-dl==2021.12.17
 zipp==3.7.0
